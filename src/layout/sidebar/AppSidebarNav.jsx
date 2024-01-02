@@ -13,10 +13,11 @@ export const AppSidebarNav = ({ items }) => {
         {icon
           ? icon
           : indent && (
-              <span className="nav-icon text-break text-wrap" >
-                <span className="nav-icon-bullet">
-                  {/* you can ad icon */}
-                </span>
+              <span className="nav-icon text-break" style={{marginLeft:'0.1px'}}>
+                <div>.</div>
+                {/* <span className="nav-icon-bullet">
+                  you can ad icon
+                </span> */}
               </span>
             )}
         {name && <span className='text-wrap'>{name}</span>}
