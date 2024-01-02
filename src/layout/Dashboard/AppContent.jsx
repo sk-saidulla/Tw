@@ -1,13 +1,8 @@
 import React, { Suspense } from "react";
 import {
-  BrowserRouter as Router,
-  Navigate,
-  Route,
-  Routes,
   Outlet
 } from "react-router-dom";
-import { CContainer, CSpinner } from "@coreui/react";
-import routes from "../../routes";
+import { CSpinner } from "@coreui/react";
 class AppContent extends React.Component {
   constructor(props) {
     super(props);

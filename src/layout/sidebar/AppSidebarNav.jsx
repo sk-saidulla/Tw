@@ -7,18 +7,19 @@ import { CBadge } from '@coreui/react'
 export const AppSidebarNav = ({ items }) => {
   const location = useLocation()
   const navLink = (name, icon, badge, indent = false) => {
+    debugger;
     return (
       <>
         {icon
           ? icon
           : indent && (
-              <span className="nav-icon text-break" >
+              <span className="nav-icon text-break text-wrap" >
                 <span className="nav-icon-bullet">
                   {/* you can ad icon */}
                 </span>
               </span>
             )}
-        {name && name}
+        {name && <span className='text-wrap'>{name}</span>}
         {badge && (
           <CBadge color={badge.color} className="ms-auto">
             {badge.text}

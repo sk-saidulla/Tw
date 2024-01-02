@@ -33,11 +33,13 @@ const CFormInputWithMask = IMaskMixin(({ inputRef, ...props }) => (
   <CFormInput {...props} ref={inputRef} />
 ));
 const rowSize = "20px";
-const requirementIcon="4px";
+const requirementIcon = "4px";
 class Company extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isException: false,
+      isException: false,
       countries: [],
       states: [],
       gstLocations: [],
@@ -65,7 +67,11 @@ class Company extends React.Component {
       tanNumber: "",
       tdsapplicableFrom: "",
     };
-
+    var currentUser = AuthenticationService.currentUserValue;
+    if (currentUser === null || currentUser === undefined) {
+      AuthenticationService.logout();
+      this.props.navigate(Config.signInPath);
+    }
     this.onChange = this.onChange.bind(this);
     this.onTextChange = this.onTextChange.bind(this);
     this.loadCompanyData = this.loadCompanyData.bind(this);
@@ -73,10 +79,11 @@ class Company extends React.Component {
   }
   componentDidMount() {
     var currentUser = AuthenticationService.currentUserValue;
-    if (!currentUser) {
+    if (currentUser === null || currentUser === undefined) {
       AuthenticationService.logout();
       this.props.navigate(Config.signInPath);
     }
+    this.loadCompanyData();
     LocationService.getCountry().then(
       (res) => {
         if (res.isSuccess) {
@@ -88,9 +95,13 @@ class Company extends React.Component {
             });
           });
           this.setState({ countries: ret });
+        } else {
+          this.setState({ isException: true });
         }
       },
-      (error) => {}
+      (error) => {
+        this.setState({ isException: true });
+      }
     );
     GstServices.getGstLocations().then(
       (res) => {
@@ -106,65 +117,75 @@ class Company extends React.Component {
             });
           });
           this.setState({ gstLocations: ret });
+        } else {
+          this.setState({ isException: true });
         }
       },
-      (error) => {}
+      (error) => {
+        this.setState({ isException: true });
+      }
     );
+  }
+  loadCompanyData = () => {
     CompanyServices.getCompanyDetails().then(
       (res) => {
         if (res.isSuccess) {
-          this.loadCompanyData(res);
+          this.setState({
+            companyName: res.companyName != null ? res.companyName : "",
+            legalName: res.aliasName != null ? res.aliasName : "",
+            mallingName: res.mailingName != null ? res.mailingName : "",
+            country: res.address && {
+              label: res.address.country,
+              value: res.address.countryId,
+            },
+            state: res.address && {
+              label: res.address.state,
+              value: res.address.stateId,
+            },
+            address: res.address.address != null ? res.address.address : "",
+            phoneNumber: res.phoneNo != null ? res.phoneNo : "",
+            email: res.email != null ? res.email : "",
+            pan: res.pan != null ? res.pan : "",
+            isGstApplicable: res.isGstApplicable,
+            gstNumber: res.gstNumber != null ? res.gstNumber : "",
+            gstUserName: res.gstUserName != null ? res.gstUserName : "",
+            gstLocation: res.gstStateCode,
+            applicableFrom: res.gstApplicableFrom
+              ? moment(res.gstApplicableFrom).format("YYYY-MM-DD")
+              : "",
+            isEinvoice: res.isEInvoiceApplicable,
+            eInvoiceUserName:
+              res.eInvoiceUserName != null ? res.eInvoiceUserName : "",
+            eInvoicePassword:
+              res.eInvoicePassword != null ? res.eInvoicePassword : "",
+            isEwayBill: res.isEwayBillApplicable,
+            ewayBillUserName:
+              res.ewayBillUserName != null ? res.ewayBillUserName : "",
+            eWayBilPassword:
+              res.ewayBillPassword != null ? res.ewayBillPassword : "",
+            tdsApplicable: res.isTdsApplicable,
+            tanNumber: res.tinNumber != null ? res.tinNumber : "",
+            tdsapplicableFrom: res.tdsApplicableFrom
+              ? moment(res.tdsApplicableFrom).format("YYYY-MM-DD")
+              : "",
+          });
+        } else {
+          this.setState({ isException: true });
         }
       },
-      (error) => {}
+      (error) => {
+        this.setState({ isException: true });
+      }
     );
-  }
-  loadCompanyData = (res) => {
-    this.setState({
-      companyName: res.companyName,
-      legalName: res.aliasName,
-      mallingName: res.mailingName,
-      country: res.address && {
-        label: res.address.country,
-        value: res.address.countryId,
-      },
-      state: res.address && {
-        label: res.address.state,
-        value: res.address.stateId,
-      },
-      address: res.address.address,
-      phoneNumber: res.phoneNo,
-      email: res.email,
-      pan: res.pan,
-      isGstApplicable: res.isGstApplicable,
-      gstNumber: res.gstNumber,
-      gstUserName: res.gstUserName,
-      gstLocation: res.gstStateCode,
-      applicableFrom: res.gstApplicableFrom
-        ? moment(res.gstApplicableFrom).format("YYYY-MM-DD")
-        : "",
-      isEinvoice: res.isEInvoiceApplicable,
-      eInvoiceUserName: res.eInvoiceUserName,
-      eInvoicePassword: res.eInvoicePassword,
-      isEwayBill: res.isEwayBillApplicable,
-      ewayBillUserName: res.ewayBillUserName,
-      eWayBilPassword: res.ewayBillPassword,
-      tdsApplicable: res.isTdsApplicable,
-      tanNumber: res.tinNumber,
-      tdsapplicableFrom: res.tdsApplicableFrom
-        ? moment(res.tdsApplicableFrom).format("YYYY-MM-DD")
-        : "",
-    });
   };
 
   onTextChange = (e) => {
-    debugger;
     this.setState({ [e.target.name]: e.target.value });
   };
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.checked });
   };
-  onDropDownChange(value, action) {
+  onDropDownChange = (value, action) => {
     this.setState({ [action.name]: value.value });
     if (action.name == "country") {
       var ret = [];
@@ -178,13 +199,20 @@ class Company extends React.Component {
               });
             });
             this.setState({ states: ret });
+          } else {
+            this.setState({ isException: true });
           }
         },
-        (error) => {}
+        (error) => {
+          this.setState({ isException: true });
+        }
       );
     }
-  }
+  };
   render() {
+    if (this.state.isException) {
+      throw new Error();
+    }
     return (
       <>
         <CCol xs={12}>
@@ -294,10 +322,10 @@ class Company extends React.Component {
                     is: true,
                     then: Yup.string().required("this field is required"),
                   }),
-                  tdsapplicableFrom: Yup.date().when("tdsApplicable", {
-                    is: true,
-                    then: Yup.date().required("this field is required"),
-                  }),
+                  // tdsapplicableFrom: Yup.date().when("tdsApplicable", {
+                  //   is: true,
+                  //   then: Yup.date().required("this field is required"),
+                  // }),
                 })}
                 onSubmit={(
                   {
@@ -370,14 +398,36 @@ class Company extends React.Component {
                           "success",
                           2000
                         );
-                        await new Promise((resolve) =>
-                          setTimeout(resolve, 2000)
+                        this.loadCompanyData();
+                      } else {
+                        notify(
+                          {
+                            message: res.message,
+                            width: 400,
+                            position: {
+                              my: "center top",
+                              at: "center top",
+                            },
+                          },
+                          "error",
+                          2000
                         );
-                        window.location.reload(true);
                       }
                     },
                     (error) => {
                       setSubmitting(false);
+                      notify(
+                        {
+                          message: "Internal Server Error",
+                          width: 400,
+                          position: {
+                            my: "center top",
+                            at: "center top",
+                          },
+                        },
+                        "error",
+                        2000
+                      );
                     }
                   );
                   setStatus();
@@ -389,7 +439,12 @@ class Company extends React.Component {
                         <CCol md={4}>
                           <CFormLabel htmlFor="companyName">
                             Company Name
-                            <span style={{ color: "red", marginLeft: requirementIcon }}>
+                            <span
+                              style={{
+                                color: "red",
+                                marginLeft: requirementIcon,
+                              }}
+                            >
                               *
                             </span>
                           </CFormLabel>
@@ -438,7 +493,12 @@ class Company extends React.Component {
                         <CCol md={4}>
                           <CFormLabel htmlFor="mallingName">
                             Malling Name{" "}
-                            <span style={{ color: "red", marginLeft: requirementIcon }}>
+                            <span
+                              style={{
+                                color: "red",
+                                marginLeft: requirementIcon,
+                              }}
+                            >
                               *
                             </span>
                           </CFormLabel>
@@ -471,7 +531,12 @@ class Company extends React.Component {
                         <CCol md={4}>
                           <CFormLabel htmlFor="country">
                             Country{" "}
-                            <span style={{ color: "red", marginLeft: requirementIcon }}>
+                            <span
+                              style={{
+                                color: "red",
+                                marginLeft: requirementIcon,
+                              }}
+                            >
                               *
                             </span>
                           </CFormLabel>
@@ -497,7 +562,12 @@ class Company extends React.Component {
                         <CCol md={4}>
                           <CFormLabel htmlFor="state">
                             state{" "}
-                            <span style={{ color: "red", marginLeft: requirementIcon }}>
+                            <span
+                              style={{
+                                color: "red",
+                                marginLeft: requirementIcon,
+                              }}
+                            >
                               *
                             </span>
                           </CFormLabel>
@@ -521,7 +591,12 @@ class Company extends React.Component {
                         <CCol md={4}>
                           <CFormLabel htmlFor="address">
                             Address{" "}
-                            <span style={{ color: "red", marginLeft: requirementIcon }}>
+                            <span
+                              style={{
+                                color: "red",
+                                marginLeft: requirementIcon,
+                              }}
+                            >
                               *
                             </span>
                           </CFormLabel>
@@ -553,7 +628,12 @@ class Company extends React.Component {
                         <CCol md={4}>
                           <CFormLabel htmlFor="phoneNumber">
                             Phone No{" "}
-                            <span style={{ color: "red", marginLeft: requirementIcon }}>
+                            <span
+                              style={{
+                                color: "red",
+                                marginLeft: requirementIcon,
+                              }}
+                            >
                               *
                             </span>
                           </CFormLabel>
@@ -580,7 +660,12 @@ class Company extends React.Component {
                         <CCol md={4}>
                           <CFormLabel htmlFor="email">
                             Email{" "}
-                            <span style={{ color: "red", marginLeft: requirementIcon }}>
+                            <span
+                              style={{
+                                color: "red",
+                                marginLeft: requirementIcon,
+                              }}
+                            >
                               *
                             </span>
                           </CFormLabel>
@@ -609,7 +694,12 @@ class Company extends React.Component {
                         <CCol md={4}>
                           <CFormLabel htmlFor="pan">
                             Pan{" "}
-                            <span style={{ color: "red", marginLeft: requirementIcon }}>
+                            <span
+                              style={{
+                                color: "red",
+                                marginLeft: requirementIcon,
+                              }}
+                            >
                               *
                             </span>
                           </CFormLabel>
@@ -652,7 +742,10 @@ class Company extends React.Component {
                               <CFormLabel htmlFor="gstNumber">
                                 GST Number{" "}
                                 <span
-                                  style={{ color: "red", marginLeft: requirementIcon }}
+                                  style={{
+                                    color: "red",
+                                    marginLeft: requirementIcon,
+                                  }}
                                 >
                                   *
                                 </span>
@@ -682,7 +775,10 @@ class Company extends React.Component {
                               <CFormLabel htmlFor="gstUserName">
                                 GST UserName{" "}
                                 <span
-                                  style={{ color: "red", marginLeft: requirementIcon }}
+                                  style={{
+                                    color: "red",
+                                    marginLeft: requirementIcon,
+                                  }}
                                 >
                                   *
                                 </span>
@@ -713,7 +809,10 @@ class Company extends React.Component {
                               <CFormLabel htmlFor="gstLocation">
                                 GST Location{" "}
                                 <span
-                                  style={{ color: "red", marginLeft: requirementIcon }}
+                                  style={{
+                                    color: "red",
+                                    marginLeft: requirementIcon,
+                                  }}
                                 >
                                   *
                                 </span>
@@ -741,7 +840,10 @@ class Company extends React.Component {
                               <CFormLabel htmlFor="applicableFrom">
                                 Applicable From{" "}
                                 <span
-                                  style={{ color: "red", marginLeft: requirementIcon }}
+                                  style={{
+                                    color: "red",
+                                    marginLeft: requirementIcon,
+                                  }}
                                 >
                                   *
                                 </span>
@@ -789,7 +891,10 @@ class Company extends React.Component {
                               <CFormLabel htmlFor="eInvoiceUserName">
                                 E-Invoice UseName{" "}
                                 <span
-                                  style={{ color: "red", marginLeft: requirementIcon }}
+                                  style={{
+                                    color: "red",
+                                    marginLeft: requirementIcon,
+                                  }}
                                 >
                                   *
                                 </span>
@@ -821,7 +926,10 @@ class Company extends React.Component {
                               <CFormLabel htmlFor="eInvoicePassword">
                                 E-Invoice Password{" "}
                                 <span
-                                  style={{ color: "red", marginLeft: requirementIcon }}
+                                  style={{
+                                    color: "red",
+                                    marginLeft: requirementIcon,
+                                  }}
                                 >
                                   *
                                 </span>
@@ -870,7 +978,10 @@ class Company extends React.Component {
                               <CFormLabel htmlFor="ewayBillUserName">
                                 E-Way Bill UserName{" "}
                                 <span
-                                  style={{ color: "red", marginLeft: requirementIcon }}
+                                  style={{
+                                    color: "red",
+                                    marginLeft: requirementIcon,
+                                  }}
                                 >
                                   *
                                 </span>
@@ -902,7 +1013,10 @@ class Company extends React.Component {
                               <CFormLabel htmlFor="eWayBilPassword">
                                 E-Way Bill Password{" "}
                                 <span
-                                  style={{ color: "red", marginLeft: requirementIcon }}
+                                  style={{
+                                    color: "red",
+                                    marginLeft: requirementIcon,
+                                  }}
                                 >
                                   *
                                 </span>
@@ -951,7 +1065,10 @@ class Company extends React.Component {
                               <CFormLabel htmlFor="tanNumber">
                                 Tan Number{" "}
                                 <span
-                                  style={{ color: "red", marginLeft: requirementIcon }}
+                                  style={{
+                                    color: "red",
+                                    marginLeft: requirementIcon,
+                                  }}
                                 >
                                   *
                                 </span>
@@ -982,7 +1099,10 @@ class Company extends React.Component {
                               <CFormLabel htmlFor="tdsapplicableFrom">
                                 Applicable From{" "}
                                 <span
-                                  style={{ color: "red", marginLeft: requirementIcon }}
+                                  style={{
+                                    color: "red",
+                                    marginLeft: requirementIcon,
+                                  }}
                                 >
                                   *
                                 </span>
@@ -1012,6 +1132,7 @@ class Company extends React.Component {
                         )}
                       </CRow>
                     </div>
+
                     <div style={{ marginTop: rowSize }}></div>
                     <CCol xs={12}>
                       <div style={{ float: "right" }}>

@@ -14,7 +14,7 @@ class DashboardHome extends React.Component {
   }
   componentDidMount() {
     var currentUser = AuthenticationService.currentUserValue;
-    if (!currentUser) {
+    if (currentUser === null || currentUser === undefined)  {
       AuthenticationService.logout();
       this.props.navigate(Config.signInPath);
     }

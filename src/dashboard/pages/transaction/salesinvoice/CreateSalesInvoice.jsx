@@ -11,30 +11,24 @@ import {
   CRow,
 } from "@coreui/react";
 import * as Yup from "yup";
-import DocsExample from "../../../components/DocsExample";
-import { IMaskMixin } from "react-imask";
+import DocsExample from "../../../../components/DocsExample";
 import { Formik, ErrorMessage, Form } from "formik";
 import Select from "react-select";
-import { AuthenticationService } from "../../../services/AuthServices";
-import { withRouter } from "../../../WithRouter";
-import Config from "../../../config";
+import { AuthenticationService } from "../../../../services/AuthServices";
+import { withRouter } from "../../../../WithRouter";
+import Config from "../../../../config";
 import { CSpinner } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
   cilArrowThickRight,
 } from "@coreui/icons";
-import notify from "devextreme/ui/notify";
-import { GroupServices } from "../../../services/GroupServices";
-const CFormInputWithMask = IMaskMixin(({ inputRef, ...props }) => (
-  <CFormInput {...props} ref={inputRef} />
-));
+
 const rowSize = "20px";
 const requirementIcon = "4px";
-class CreateGroups extends React.Component {
+class CreateSalesInvoice extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isException:false,
       underGroups: [],
       groupName: "",
       underGroup: 0,
@@ -51,27 +45,7 @@ class CreateGroups extends React.Component {
       AuthenticationService.logout();
       this.props.navigate(Config.signInPath);
     }
-    GroupServices.getAccountGroups().then(
-      (res) => {
-        if (res.isSuccess) {
-          var ret = [];
-          res.accountGroupRoot.map((group) => {
-            ret.push({
-              label: group.name,
-              value: { label: group.name, value: group.id },
-            });
-          });
-
-          this.setState({ underGroups: ret });
-        }
-        else{
-          this.setState({ isException: true });
-        }
-      },
-      (error) => {
-        this.setState({ isException: true });
-      }
-    );
+   
   }
 
   onTextChange = (e) => {
@@ -82,9 +56,6 @@ class CreateGroups extends React.Component {
     this.setState({ [action.name]: value.value });
   };
   render() {
-    if(this.state.isException){
-      throw new Error();
-    }
     return (
       <>
         <CCol xs={12}>
@@ -98,9 +69,7 @@ class CreateGroups extends React.Component {
               <Formik
                 enableReinitialize
                 initialValues={{
-                  groupName: this.state.groupName,
-                  underGroup: this.state.underGroup,
-                  description: this.state.description,
+                  
                 }}
                 validationSchema={Yup.object().shape({
                   groupName: Yup.string().required("this field is required"),
@@ -113,63 +82,10 @@ class CreateGroups extends React.Component {
                     .required("This field is required"),
                 })}
                 onSubmit={(
-                  { groupName, underGroup, description },
+                  {  },
                   { setStatus, setSubmitting }
                 ) => {
-                  GroupServices.saveAccountGroups(
-                    groupName,
-                    underGroup.value,
-                    description
-                  ).then(
-                    async (res) => {
-                      if (res.isSuccess) {
-                        notify(
-                          {
-                            message: res.message,
-                            width: 400,
-                            position: {
-                              my: "center top",
-                              at: "center top",
-                            },
-                          },
-                          "success",
-                          2000
-                        );
-                        await new Promise((resolve) =>
-                          setTimeout(resolve, 2000)
-                        );
-                        this.props.navigate("/dashboardhome/groups");
-                      } else {
-                        notify(
-                          {
-                            message: res.message,
-                            width: 400,
-                            position: {
-                              my: "center top",
-                              at: "center top",
-                            },
-                          },
-                          "error",
-                          4000
-                        );
-                      }
-                    },
-                    (error) => {
-                      setSubmitting(false);
-                      notify(
-                        {
-                          message: "Internal Server Error",
-                          width: 400,
-                          position: {
-                            my: "center top",
-                            at: "center top",
-                          },
-                        },
-                        "error",
-                        4000
-                      );
-                    }
-                  );
+                  
                   setStatus();
                 }}
                 render={({ values, errors, status, touched, isSubmitting }) => (
@@ -316,4 +232,4 @@ class CreateGroups extends React.Component {
   }
 }
 
-export default withRouter(CreateGroups);
+export default withRouter(CreateSalesInvoice);

@@ -21,6 +21,7 @@ import { AuthenticationService } from "../services/AuthServices";
 import { Formik, ErrorMessage, Form } from "formik";
 import * as Yup from "yup";
 import { withRouter } from "../WithRouter";
+import Config from "../config";
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +33,12 @@ class Login extends React.Component {
     };
     this.onTextChange = this.onTextChange.bind(this);
   }
-  componentDidMount() {   
+  componentDidMount() {
+    localStorage.clear();
+    var currentUser = AuthenticationService.currentUserValue;
+    if (currentUser !== null && currentUser !== undefined) {
+      this.props.navigate(Config.dahboardUrl);
+    }
   }
   onTextChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
@@ -75,7 +81,7 @@ class Login extends React.Component {
                     setSubmitting(false);
                   }
                 );
-                
+
                 setStatus();
               }}
               render={({ values, errors, status, touched, isSubmitting }) => (

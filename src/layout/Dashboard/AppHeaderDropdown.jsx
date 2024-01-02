@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   CAvatar,
   CBadge,
@@ -8,7 +8,7 @@ import {
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
-} from '@coreui/react'
+} from "@coreui/react";
 import {
   cilBell,
   cilCreditCard,
@@ -19,34 +19,41 @@ import {
   cilSettings,
   cilTask,
   cilUser,
-} from '@coreui/icons'
-import CIcon from '@coreui/icons-react'
-import { withRouter } from '../../WithRouter'
-import avatar8 from './../../assets/images/avatars/8.jpg'
-import { AuthenticationService } from '../../services/AuthServices'
+} from "@coreui/icons";
+import CIcon from "@coreui/icons-react";
+import { withRouter } from "../../WithRouter";
+import avatar8 from "./../../assets/images/avatars/8.jpg";
+import { AuthenticationService } from "../../services/AuthServices";
 
 class AppHeaderDropdown extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
-    this.logout=this.logout.bind(this);    
+    this.state = {};
+    this.logout = this.logout.bind(this);
   }
-  logout=()=>{
+  componentDidMount() {}
+  logout = async () => {
     AuthenticationService.logout();
+    await this.props.navigate("/login");
     window.location.reload();
-  }
-  render(){
+  };
+  render() {
     return (
       <CDropdown variant="nav-item">
-        <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
+        <CDropdownToggle
+          placement="bottom-end"
+          className="py-0 pe-0"
+          caret={false}
+        >
           <CAvatar src={avatar8} size="md" />
         </CDropdownToggle>
         <CDropdownMenu className="pt-0" placement="bottom-end">
-          <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">Account</CDropdownHeader>
-          <CDropdownItem href="#">
+          <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">
+            Account
+          </CDropdownHeader>
+          <CDropdownItem>
             <CIcon icon={cilBell} className="me-2" />
-            Updates
+            <span style={{ cursor: "pointer" }} onClick={()=>{this.props.navigate("/dashboardhome/register")}}>RegisterUser</span>
             <CBadge color="info" className="ms-2">
               42
             </CBadge>
@@ -72,7 +79,9 @@ class AppHeaderDropdown extends React.Component {
               42
             </CBadge>
           </CDropdownItem>
-          <CDropdownHeader className="bg-body-secondary fw-semibold my-2">Settings</CDropdownHeader>
+          <CDropdownHeader className="bg-body-secondary fw-semibold my-2">
+            Settings
+          </CDropdownHeader>
           <CDropdownItem href="#">
             <CIcon icon={cilUser} className="me-2" />
             Profile
@@ -96,15 +105,16 @@ class AppHeaderDropdown extends React.Component {
             </CBadge>
           </CDropdownItem>
           <CDropdownDivider />
-          <CDropdownItem href="#">
+          <CDropdownItem>
             <CIcon icon={cilLockLocked} className="me-2" />
-            <span onClick={this.logout}>LogOut</span>
+            <span style={{ cursor: "pointer" }} onClick={this.logout}>
+              LogOut
+            </span>
           </CDropdownItem>
         </CDropdownMenu>
       </CDropdown>
-    )
+    );
   }
-  
 }
 
-export default withRouter(AppHeaderDropdown)
+export default withRouter(AppHeaderDropdown);

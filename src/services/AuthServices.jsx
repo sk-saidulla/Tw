@@ -28,9 +28,7 @@ function login(userName, password) {
     });
 }
 
-function logout() {
-  localStorage.removeItem("currentUser");
+async function logout() {
+  await localStorage.removeItem("currentUser");
   currentUserSubject.next(null);
 }
-
-

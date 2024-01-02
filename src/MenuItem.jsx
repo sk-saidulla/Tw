@@ -190,7 +190,7 @@ const MenuItem = [
           {
             component: CNavItem,
             name: "Sales Invoice",
-            to: "/base/accordion",
+            to: "/dashboardhome/salesinvoice",
           },
           {
             component: CNavItem,
