@@ -40,11 +40,11 @@ class Groups extends React.Component {
     this.EditCell = this.EditCell.bind(this);
   }
   componentDidMount() {
-    var currentUser = AuthenticationService.currentUserValue;
-    if (currentUser === null || currentUser === undefined) {
-      AuthenticationService.logout();
-      this.props.navigate(Config.signInPath);
-    }
+    // var currentUser = AuthenticationService.currentUserValue;
+    // if (currentUser === null || currentUser === undefined) {
+    //   AuthenticationService.logout();
+    //   this.props.navigate(Config.signInPath);
+    // }
     this.loadDataToGrid();
   }
   loadDataToGrid = () => {

@@ -78,11 +78,11 @@ class Company extends React.Component {
     this.onDropDownChange = this.onDropDownChange.bind(this);
   }
   componentDidMount() {
-    var currentUser = AuthenticationService.currentUserValue;
-    if (currentUser === null || currentUser === undefined) {
-      AuthenticationService.logout();
-      this.props.navigate(Config.signInPath);
-    }
+    // var currentUser = AuthenticationService.currentUserValue;
+    // if (currentUser === null || currentUser === undefined) {
+    //   AuthenticationService.logout();
+    //   this.props.navigate(Config.signInPath);
+    // }
     this.loadCompanyData();
     LocationService.getCountry().then(
       (res) => {

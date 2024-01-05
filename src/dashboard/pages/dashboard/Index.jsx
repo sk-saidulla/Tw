@@ -8,11 +8,11 @@ class Index extends React.Component {
     this.state = {};
   }
   componentDidMount() {
-    var currentUser = AuthenticationService.currentUserValue;
-    if (currentUser === null || currentUser === undefined) {
-      AuthenticationService.logout();
-      this.props.navigate(Config.signInPath);
-    }
+    // var currentUser = AuthenticationService.currentUserValue;
+    // if (currentUser === null || currentUser === undefined) {
+    //   AuthenticationService.logout();
+    //   this.props.navigate(Config.signInPath);
+    // }
   }
   render() {
     return (

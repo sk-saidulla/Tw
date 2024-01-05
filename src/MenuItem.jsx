@@ -37,6 +37,11 @@ const MenuItem = [
     items: [
       {
         component: CNavItem,
+        name: "GridTreeList",
+        to: "/dashboardhome/gridTreeList",
+      },
+      {
+        component: CNavItem,
         name: "Company",
         to: "/dashboardhome/company",
       },

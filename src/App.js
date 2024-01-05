@@ -17,7 +17,7 @@ const Login = React.lazy(() => import("./layout/Login"));
 // const Register = React.lazy(() => import('./views/pages/register/Register'))
 const Page404 = React.lazy(() => import("./layout/Page404"));
 const Page500 = React.lazy(() => import("./layout/Page500"));
-
+const GridTreeList=React.lazy(() => import("./dashboard/pages/GridTreeList"));
 const RegisterUser = React.lazy(() => import("./dashboard/pages/auth/RegisterUser"));
 const App = () => {
   const { isColorModeSet, setColorMode } = useColorModes(
@@ -75,6 +75,7 @@ const App = () => {
                   )
                 );
               })}
+              <Route exact path="/dashboardhome/gridTreeList" name="Grid TreeList" element={<GridTreeList />} />
             </Route>
           </Routes>
         </Suspense>

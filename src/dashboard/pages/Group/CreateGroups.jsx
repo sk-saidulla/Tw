@@ -46,11 +46,11 @@ class CreateGroups extends React.Component {
     this.onDropDownChange = this.onDropDownChange.bind(this);
   }
   componentDidMount() {
-    var currentUser = AuthenticationService.currentUserValue;
-    if (currentUser === null || currentUser === undefined)  {
-      AuthenticationService.logout();
-      this.props.navigate(Config.signInPath);
-    }
+    // var currentUser = AuthenticationService.currentUserValue;
+    // if (currentUser === null || currentUser === undefined)  {
+    //   AuthenticationService.logout();
+    //   this.props.navigate(Config.signInPath);
+    // }
     GroupServices.getAccountGroups().then(
       (res) => {
         if (res.isSuccess) {

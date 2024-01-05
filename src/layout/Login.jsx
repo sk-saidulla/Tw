@@ -34,11 +34,11 @@ class Login extends React.Component {
     this.onTextChange = this.onTextChange.bind(this);
   }
   componentDidMount() {
-    localStorage.clear();
-    var currentUser = AuthenticationService.currentUserValue;
-    if (currentUser !== null && currentUser !== undefined) {
-      this.props.navigate(Config.dahboardUrl);
-    }
+    // localStorage.clear();
+    // var currentUser = AuthenticationService.currentUserValue;
+    // if (currentUser !== null && currentUser !== undefined) {
+    //   this.props.navigate(Config.dahboardUrl);
+    // }
   }
   onTextChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
@@ -63,24 +63,25 @@ class Login extends React.Component {
                 { setStatus, setSubmitting }
               ) => {
                 setSubmitting(true);
+                this.props.navigate("/dashboardhome/dashboard");
                 this.setState({ alert: false, errorMessage: "" });
-                AuthenticationService.login(username, password).then(
-                  (res) => {
-                    if (res.isSuccess) {
-                      this.props.navigate("/dashboardhome/dashboard");
-                      return;
-                    }
-                    this.setState({ alert: true, errorMessage: res.message });
-                    setSubmitting(false);
-                  },
-                  (error) => {
-                    this.setState({
-                      alert: true,
-                      errorMessage: "Internal Server Error!",
-                    });
-                    setSubmitting(false);
-                  }
-                );
+                // AuthenticationService.login(username, password).then(
+                //   (res) => {
+                //     if (res.isSuccess) {
+                //       this.props.navigate("/dashboardhome/dashboard");
+                //       return;
+                //     }
+                //     this.setState({ alert: true, errorMessage: res.message });
+                //     setSubmitting(false);
+                //   },
+                //   (error) => {
+                //     this.setState({
+                //       alert: true,
+                //       errorMessage: "Internal Server Error!",
+                //     });
+                //     setSubmitting(false);
+                //   }
+                // );
 
                 setStatus();
               }}
