@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-
+import logo from '../../assets/BBSC.png'
 import {
   CCloseButton,
   CSidebar,
@@ -14,7 +14,7 @@ import CIcon from '@coreui/icons-react'
 
 import { AppSidebarNav } from './AppSidebarNav'
 
-import { logo } from '../../assets/brand/logo'
+// import { logo } from '../../assets/brand/logo'
 import { sygnet } from '../../assets/brand/sygnet'
 
 import SimpleBar from 'simplebar-react'
@@ -42,9 +42,9 @@ const AppSideBar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <h2 style={{color:'#4B49B6', marginLeft:'60px'}}>BBSC</h2>
-          {/* <CIcon customClassName="sidebar-brand-full" icon={logo} height={32} />
-          <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} /> */}
+          {/* <h2 style={{color:'#4B49B6', marginLeft:'60px'}}>BBSC</h2> */}
+          <CIcon customClassName="sidebar-brand-full" icon={"../../assets/BBSC.svg"} height={32} />
+          {/* <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} /> */}
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"

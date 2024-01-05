@@ -147,7 +147,6 @@ class SalesInvoice extends React.Component {
       },
       (error) => {
         this.setState({ isDownload: false });
-        debugger;
         notify(
           {
             message: "Internal Server Error",

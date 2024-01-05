@@ -1,5 +1,6 @@
 const currentUser=JSON.parse(localStorage.getItem('currentUser')) ;
 export function authHeader() {
+    debugger;
     if (currentUser && currentUser.token) {
         return {
             Authorization: `Bearer ${currentUser.token}`,

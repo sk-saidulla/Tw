@@ -1,6 +1,7 @@
 import { AuthenticationService } from "../services/AuthServices";
 
 export function handleResponse(response) {
+  debugger;
   return response.text().then((text) => {
     if (
       !response.ok ||

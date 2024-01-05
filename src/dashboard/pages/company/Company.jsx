@@ -127,6 +127,7 @@ class Company extends React.Component {
     );
   }
   loadCompanyData = () => {
+    debugger;
     CompanyServices.getCompanyDetails().then(
       (res) => {
         if (res.isSuccess) {

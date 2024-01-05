@@ -1,38 +1,40 @@
-import React from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
-import PropTypes from 'prop-types'
+import React from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
 
-import { CBadge } from '@coreui/react'
+import { CBadge } from "@coreui/react";
 
 export const AppSidebarNav = ({ items }) => {
-  const location = useLocation()
+  const location = useLocation();
   const navLink = (name, icon, badge, indent = false) => {
-    debugger;
     return (
       <>
         {icon
           ? icon
           : indent && (
-              <span className="nav-icon text-break" style={{marginLeft:'0.1px'}}>
+              <span
+                className="nav-icon text-break"
+                style={{ marginLeft: "0.1px" }}
+              >
                 <div>.</div>
                 {/* <span className="nav-icon-bullet">
                   you can ad icon
                 </span> */}
               </span>
             )}
-        {name && <span className='text-wrap'>{name}</span>}
+        {name && <span className="text-wrap">{name}</span>}
         {badge && (
           <CBadge color={badge.color} className="ms-auto">
             {badge.text}
           </CBadge>
         )}
       </>
-    )
-  }
+    );
+  };
 
   const navItem = (item, index, indent = false) => {
-    const { component, name, badge, icon, ...rest } = item
-    const Component = component
+    const { component, name, badge, icon, ...rest } = item;
+    const Component = component;
     return (
       <Component
         {...(rest.to &&
@@ -44,11 +46,11 @@ export const AppSidebarNav = ({ items }) => {
       >
         {navLink(name, icon, badge, indent)}
       </Component>
-    )
-  }
+    );
+  };
   const navGroup = (item, index) => {
-    const { component, name, icon, items, to, ...rest } = item
-    const Component = component
+    const { component, name, icon, items, to, ...rest } = item;
+    const Component = component;
     return (
       <Component
         compact
@@ -59,20 +61,22 @@ export const AppSidebarNav = ({ items }) => {
         {...rest}
       >
         {item.items?.map((item, index) =>
-          item.items ? navGroup(item, index) : navItem(item, index, true),
+          item.items ? navGroup(item, index) : navItem(item, index, true)
         )}
       </Component>
-    )
-  }
+    );
+  };
 
   return (
     <React.Fragment>
       {items &&
-        items.map((item, index) => (item.items ? navGroup(item, index) : navItem(item, index)))}
+        items.map((item, index) =>
+          item.items ? navGroup(item, index) : navItem(item, index)
+        )}
     </React.Fragment>
-  )
-}
+  );
+};
 
 AppSidebarNav.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
-}
+};
