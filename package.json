@@ -34,6 +34,7 @@
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.1.2",
     "@testing-library/user-event": "^14.5.1",
+    "cross-env": "^7.0.3",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "prettier": "3.1.0",
@@ -42,8 +43,12 @@
     "web-vitals": "^3.5.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start:TransWonders": "cross-env REACT_APP_PRODUCT_TYPE=TransWonders react-scripts start",
+    "start:AccountsWonders": "cross-env REACT_APP_PRODUCT_TYPE=AccountsWonders react-scripts start",
+    "start:TaxWonders": "REACT_APP_PRODUCT_TYPE=TaxWonders react-scripts start",
+    "build:TransWonders": "REACT_APP_PRODUCT_TYPE=TransWonders react-scripts build",
+    "build:AccountsWonders": "REACT_APP_PRODUCT_TYPE=AccountsWonders react-scripts build",
+    "build:TaxWonders": "REACT_APP_PRODUCT_TYPE=TaxWonders react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
